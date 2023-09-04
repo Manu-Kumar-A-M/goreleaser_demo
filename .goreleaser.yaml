@@ -1,0 +1,145 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of uname.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+    - goos: windows
+      format: zip
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+# The lines beneath this are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+# .goreleaser.yaml
+chocolateys:
+  -
+    # Your app's package name.
+    # The value may not contain spaces or character that are not valid for a URL.
+    # If you want a good separator for words, use '-', not  '.'.
+    #
+    # Default: ProjectName
+    name: 'Goreleaserdemo'
+
+    # IDs of the archives to use.
+    # Empty means all IDs.
+
+    # Your app's owner.
+    # It basically means your.
+    owners: ManuKumar A M
+
+    # The app's title.
+    # A human-friendly title of the package.
+    #
+    # Default: ProjectName
+    title: 'Goreleaser demo'
+
+    # Your app's authors (probably you).
+    authors: ManuKumar A M
+
+    # Your app's project url.
+    # It is a required field.
+    project_url: https://veracode.com/
+
+    # URL which is determined by the given Token (github,
+    # gitlab or gitea).
+    #
+    # Default: depends on the git remote
+    # Templates: allowed
+    url_template: https://github.com/Manu-Kumar-A-M/goreleaser_demo/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    # App's icon.
+    #icon_url: 'https://rawcdn.githack.com/foo/bar/efbdc760-395b-43f1-bf69-ba25c374d473/icon.png'
+
+    # Your app's copyright details.
+    copyright: 2022 Drummer Roll Inc
+
+    # App's license information url.
+
+    # Your apps's require license acceptance:
+    # Specify whether the client must prompt the consumer to accept the package
+    # license before installing.
+    require_license_acceptance: false
+
+    # Your app's source url.
+    project_source_url: https://github.com/Manu-Kumar-A-M/goreleaser_demo
+
+    # App's bugtracker url.
+    bug_tracker_url: https://github.com/Manu-Kumar-A-M/goreleaser_demo/issues
+
+    tags: "goreleaserdemo accion"
+
+    # Your app's summary:
+    summary: Software to create fast and easy drum rolls.
+
+    # This the description of your chocolatey package.
+    # Supports markdown.
+    description: |
+      Goreleaser test installer package.
+      Software to create fast and easy drum rolls.
+
+    # Your app's release notes.
+    # A description of the changes made in this release of the package.
+    # Supports markdown. To prevent the need to continually update this field,
+    # providing a URL to an external list of Release Notes is perfectly
+    # acceptable.
+    release_notes: "https://github.com/Manu-Kumar-A-M/goreleaser_demo/releases/tag/v{{ .Version }}"
+
+    # App's dependencies
+    # The version is not required.
+    dependencies:
+      - id: nfpm
+        version: 2.20.0
+
+    # The api key that should be used to push to the chocolatey repository.
+    #
+    # WARNING: do not expose your api key in the configuration file!
+    api_key: '8b112fe8-6a5f-41dc-b92c-24660ccc8e6b'
+
+    # The source repository that will push the package to.
+    source_repo: "https://push.chocolatey.org/"
+
+    # Setting this will prevent goreleaser to actually try to push the package
+    # to chocolatey repository, leaving the responsibility of publishing it to
+    # the user.
+    skip_publish: false
+
+    # GOAMD64 to specify which amd64 version to use if there are multiple
+    # versions from the build section.
+    #
+    # Default: 'v1'
+    goamd64: v1
+
